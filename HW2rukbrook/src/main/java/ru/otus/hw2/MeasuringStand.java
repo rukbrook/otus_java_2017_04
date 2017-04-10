@@ -13,23 +13,28 @@ public class MeasuringStand<T> {
     private int size = 10*1024*1024;
     private long averageSize;
 
+    @Override
+    public String toString() {
+        return "averageSize of 1 object = " + averageSize;
+    }
+
     public MeasuringStand(Runtime runtime, T originalCopy) throws InterruptedException, NoSuchMethodException, InvocationTargetException, InstantiationException, IllegalAccessException {
         this.runtime = runtime;
         calcAverageSize(originalCopy);
     }
 
-    public long getAverageSize() {
-        return averageSize;
-    }
-
     private void calcAverageSize(T originalCopy) throws InterruptedException, NoSuchMethodException, InstantiationException, IllegalAccessException, InvocationTargetException {
+        System.out.println("start of the calculation");
         int result = 0;
         for(int i=0; i<5; i++)
         {
-            result+= calcSize(originalCopy);
-            System.out.println("i= " + i);
+            if(i!=0)
+                result+= calcSize(originalCopy);
+            else
+                calcSize(originalCopy);
+            System.out.println((i+1)+"/5 of the calculation" );
         }
-        averageSize = result/5;
+        averageSize = result/4;
     }
 
     private long calcSize(T originalCopy) throws InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException, InterruptedException {
@@ -39,11 +44,10 @@ public class MeasuringStand<T> {
             T tmp = (T) BeanUtils.cloneBean(originalCopy);
             array[i] = tmp;
         }
-        Thread.sleep(1000);
         long start = runtime.freeMemory();
         array = null;
         System.gc();
-        Thread.sleep(10000);
+        Thread.sleep(1000);
         long end = runtime.freeMemory();
         return (end-start)/size;
     }

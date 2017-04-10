@@ -12,6 +12,6 @@ public class Main {
         System.out.println("Starting pod: " + ManagementFactory.getRuntimeMXBean().getName());
         Runtime runtime = Runtime.getRuntime();
         MeasuringStand<String> test = new MeasuringStand<>(runtime, new String(""));
-        System.out.println(test.getAverageSize());
+        System.out.println(test.toString());
     }
 }
