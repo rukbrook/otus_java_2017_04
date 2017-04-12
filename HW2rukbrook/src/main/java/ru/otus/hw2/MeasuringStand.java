@@ -28,26 +28,25 @@ public class MeasuringStand<T> {
         int result = 0;
         for(int i=0; i<5; i++)
         {
-            if(i!=0)
-                result+= calcSize(originalCopy);
-            else
-                calcSize(originalCopy);
+            result+= calcSize(originalCopy);
             System.out.println((i+1)+"/5 of the calculation" );
         }
-        averageSize = result/4;
+        averageSize = result/5;
     }
 
     private long calcSize(T originalCopy) throws InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException, InterruptedException {
         array = new Object[size];
         for(int i = 0; i < size; i++)
         {
-            T tmp = (T) BeanUtils.cloneBean(originalCopy);
-            array[i] = tmp;
+            array[i] = (T) BeanUtils.cloneBean(originalCopy);
         }
-        long start = runtime.freeMemory();
-        array = null;
         System.gc();
-        Thread.sleep(1000);
+        long start = runtime.freeMemory();
+        for(int i = 0; i < size; i++)
+        {
+            array[i] = null;
+        }
+        System.gc();
         long end = runtime.freeMemory();
         return (end-start)/size;
     }
